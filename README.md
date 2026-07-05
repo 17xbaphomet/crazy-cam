@@ -1,60 +1,64 @@
 # crazy-cam
 
-Camera app for Android that applies memory-safe filters to the live camera stream using Rust + UniFFI.
+**Memory-safe camera app** using **Kotlin + Jetpack Compose** + **Rust + UniFFI** for live image filtering.
 
-## Architecture
+## Features
+- Live camera preview with real-time Rust filters
+- Memory-safe image processing in Rust
+- Easy to extend with new filters
 
-- **Kotlin / Jetpack Compose** frontend + CameraX
-- **Rust** (via UniFFI) for all image filter logic (memory safety + performance)
+## Quick Start (Arch Linux)
+
+### 1. Prerequisites
+
+```bash
+# Install Rust
+yay -S rustup
+rustup default stable
+
+# Install Android Studio + NDK (via SDK Manager)
+```
+
+### 2. Clone & Setup
+
+```bash
+git clone https://github.com/17xbaphomet/crazy-cam.git
+cd crazy-cam
+
+# Make build script executable
+chmod +x build_rust.sh
+
+# Build Rust library + generate bindings
+./build_rust.sh
+```
+
+### 3. Open in Android Studio
+
+1. Open Android Studio
+2. **File → Open** → select the `crazy-cam` folder
+3. Wait for Gradle sync
+4. Run the app on a device/emulator
+
+The app will request camera permission and show live filtered camera frames.
+
+## How it works
+
+- CameraX captures frames
+- Frames are passed to Rust via UniFFI
+- Rust applies filters using the `image` crate (safe & fast)
+- Processed frames are displayed in Compose
+
+## Adding New Filters
+
+Edit `rust/crazy_cam_filters/src/lib.rs` and add new functions.
+Then re-run `./build_rust.sh`.
 
 ## Project Structure
 
 ```
 crazy-cam/
-├── app/                    # Android app (initialize with Android Studio)
-├── rust/
-│   └── crazy_cam_filters/   # UniFFI Rust library
-│       ├── Cargo.toml
-│       ├── uniffi.toml
-│       └── src/
-│           ├── crazy_cam_filters.udl
-│           └── lib.rs
+├── app/                    # Android app (Kotlin + Compose + CameraX)
+├── rust/crazy_cam_filters/ # Rust + UniFFI filter library
+├── build_rust.sh           # One-command build for Rust part
 └── README.md
 ```
-
-## Quick Start
-
-### 1. Rust Library (already set up)
-
-```bash
-cd rust/crazy_cam_filters
-
-# Build for Android
-cargo ndk \
-    -t arm64-v8a -t armeabi-v7a -t x86_64 -t x86 \
-    -o ../../app/src/main/jniLibs \
-    build --release
-
-# Generate Kotlin bindings
-cargo run --bin uniffi-bindgen generate \
-    --library ../../app/src/main/jniLibs/arm64-v8a/libcrazy_cam_filters.so \
-    --language kotlin \
-    --out-dir ../../app/src/main/java/com/example/crazycam/
-```
-
-### 2. Android App
-
-1. Open the `app/` folder in Android Studio (or create a new Android project and copy the rust/ folder next to it).
-2. Add CameraX dependencies.
-3. Use the generated `CrazyCamFilters` object to call `processFrame(...)` from your `ImageAnalysis.Analyzer`.
-
-See the Rust code for available filters (grayscale, invert, brightness). Easy to extend.
-
-## Next Steps
-
-- Add more filters in `rust/crazy_cam_filters/src/lib.rs`
-- Improve YUV → RGB conversion (currently expects RGB bytes)
-- Add Gradle plugin to automate build + bindgen
-- Consider switching some effects to GPU (wgpu) for "crazy" real-time performance
-
-Built with memory safety in mind using Rust + UniFFI.
