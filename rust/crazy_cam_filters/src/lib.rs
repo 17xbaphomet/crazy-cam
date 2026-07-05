@@ -1,7 +1,8 @@
 use image::{ImageBuffer, Rgb, RgbImage};
 
-uniffi::include_scaffolding!("crazy_cam_filters");
+uniffi::setup_scaffolding!();
 
+#[uniffi::export]
 pub fn process_frame(width: i32, height: i32, rgb_data: Vec<u8>) -> Vec<u8> {
     let img: RgbImage = match ImageBuffer::from_raw(
         width as u32,
@@ -12,15 +13,10 @@ pub fn process_frame(width: i32, height: i32, rgb_data: Vec<u8>) -> Vec<u8> {
         None => return vec![],
     };
 
-    // === Change this line to switch filters ===
+    // Change filter here or add more exported functions
     let processed = apply_grayscale(&img);
-    // let processed = apply_invert(&img);
-    // let processed = apply_brightness(&img, 1.4);
-
     processed.into_raw()
 }
-
-// ==================== Filter implementations ====================
 
 fn apply_grayscale(img: &RgbImage) -> RgbImage {
     let mut out = img.clone();
@@ -33,23 +29,6 @@ fn apply_grayscale(img: &RgbImage) -> RgbImage {
     out
 }
 
-fn apply_invert(img: &RgbImage) -> RgbImage {
-    let mut out = img.clone();
-    for pixel in out.pixels_mut() {
-        pixel[0] = 255 - pixel[0];
-        pixel[1] = 255 - pixel[1];
-        pixel[2] = 255 - pixel[2];
-    }
-    out
-}
-
-fn apply_brightness(img: &RgbImage, factor: f32) -> RgbImage {
-    let mut out = img.clone();
-    for pixel in out.pixels_mut() {
-        for c in 0..3 {
-            let val = (pixel[c] as f32 * factor).clamp(0.0, 255.0) as u8;
-            pixel[c] = val;
-        }
-    }
-    out
-}
+// Example: You can add more exported functions like this:
+// #[uniffi::export]
+// pub fn apply_invert(width: i32, height: i32, rgb_data: Vec<u8>) -> Vec<u8> { ... }

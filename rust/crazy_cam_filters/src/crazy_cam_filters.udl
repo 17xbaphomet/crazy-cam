@@ -1,3 +1,0 @@
-namespace crazy_cam_filters {
-    sequence<u8> process_frame(i32 width, i32 height, sequence<u8> rgb_data);
-};
