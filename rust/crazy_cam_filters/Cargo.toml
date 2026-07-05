@@ -12,3 +12,6 @@ image = "0.25"
 
 [build-dependencies]
 uniffi = { version = "0.28", features = ["build"] }
+
+[dev-dependencies]
+uniffi_bindgen = "0.28"
