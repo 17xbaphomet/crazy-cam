@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CrazyCam" parent="android:Theme.Material.Light.NoDisplay" />
-</style>
-</style>
+    <style name="Theme.CrazyCam" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

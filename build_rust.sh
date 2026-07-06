@@ -12,7 +12,7 @@ fi
 
 rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android 2>/dev/null || true
 
-export ANDROID_NDK_HOME=${ANDROID_NDK_HOME:-$HOME/Android/Sdk/ndk/26.1.10909125}
+export ANDROID_NDK_HOME=${ANDROID_NDK_HOME:-$HOME/Android/Sdk/ndk/27.0.12077973}
 
 cargo ndk \
     -t arm64-v8a -t armeabi-v7a -t x86_64 -t x86 \
@@ -21,9 +21,8 @@ cargo ndk \
 
 echo "=== Generating Kotlin bindings ==="
 
-# Build the tool first, then run it (most reliable way)
-cargo build -p uniffi_bindgen
-cargo run -p uniffi_bindgen --bin uniffi-bindgen -- generate \
+# Run the bindgen tool
+cargo run --bin uniffi-bindgen -- generate \
     --library ../../app/src/main/jniLibs/arm64-v8a/libcrazy_cam_filters.so \
     --language kotlin \
     --out-dir ../../app/src/main/java/com/example/crazycam/

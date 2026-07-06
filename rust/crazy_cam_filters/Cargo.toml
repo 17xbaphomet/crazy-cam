@@ -7,8 +7,9 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-uniffi = { version = "0.28", features = ["build"] }
+uniffi = { version = "0.28", features = ["build", "cli"] }
 image = "0.25"
+uniffi_bindgen = "0.28"
 
 [build-dependencies]
 uniffi = { version = "0.28", features = ["build"] }
