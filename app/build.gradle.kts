@@ -36,6 +36,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     buildFeatures {
         compose = true
     }
@@ -61,6 +65,7 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+    implementation(libs.jna)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

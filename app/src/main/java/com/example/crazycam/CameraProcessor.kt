@@ -23,7 +23,7 @@ class CameraProcessor(
         // For production: implement proper YUV to RGB conversion here or in Rust
 
         // Call UniFFI generated function
-        val processedBytes = CrazyCamFilters.processFrame(width, height, rgbBytes)
+        val processedBytes = processFrame(width, height, rgbBytes)
 
         // Convert processed bytes back to Bitmap
         val processedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
