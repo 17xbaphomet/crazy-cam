@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("com.github.willir.rust.cargo-ndk-android-gradle") version "0.8.5"
 }
 
 android {
@@ -31,26 +30,21 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
-
-cargoNdk {
-    targets = listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
-    outputDir = file("src/main/jniLibs")
 }
 
 dependencies {
