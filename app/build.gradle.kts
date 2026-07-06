@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("com.github.willir.rust.cargo-ndk-android-gradle") version "0.8.5"
 }
 
@@ -40,9 +41,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.7.0"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -52,38 +50,7 @@ android {
 
 cargoNdk {
     targets = listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
-    // Output .so files to jniLibs
     outputDir = file("src/main/jniLibs")
-}
-
-// Task to generate UniFFI Kotlin bindings automatically
-tasks.register("generateUniFFIBindings") {
-    dependsOn("cargoNdkBuild")
-
-    doLast {
-        val rustDir = projectDir.parentFile.resolve("rust/crazy_cam_filters")
-        val soFile = file("src/main/jniLibs/arm64-v8a/libcrazy_cam_filters.so")
-
-        if (!soFile.exists()) {
-            throw GradleException(".so file not found. Make sure cargoNdkBuild ran successfully.")
-        }
-
-        exec {
-            workingDir = rustDir
-            commandLine(
-                "cargo", "run", "-p", "uniffi_bindgen", "--bin", "uniffi-bindgen", "--",
-                "generate",
-                "--library", soFile.absolutePath,
-                "--language", "kotlin",
-                "--out-dir", file("src/main/java/com/example/crazycam").absolutePath
-            )
-        }
-    }
-}
-
-// Make assemble depend on binding generation
-tasks.named("preBuild") {
-    dependsOn("generateUniFFIBindings")
 }
 
 dependencies {
